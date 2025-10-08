@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Baseline from "./pages/Baseline";
 import Dashboard from "./pages/Dashboard";
 import DailyCheckin from "./pages/DailyCheckin";
+import Result from "./pages/Result";
 import Learn from "./pages/Learn";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -61,6 +62,14 @@ const App = () => (
             element={
               <AppLayout>
                 <DailyCheckin />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/result"
+            element={
+              <AppLayout>
+                <Result />
               </AppLayout>
             }
           />

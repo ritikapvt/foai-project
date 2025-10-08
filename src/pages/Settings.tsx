@@ -4,6 +4,7 @@ import { getUser, clearUser } from "@/lib/storage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Shield, Bell, HelpCircle } from "lucide-react";
+import { QueueRetry } from "@/components/QueueRetry";
 import { toast } from "sonner";
 
 export default function Settings() {
@@ -37,6 +38,9 @@ export default function Settings() {
         </div>
 
         <div className="space-y-4">
+          {/* Queue Retry Component */}
+          <QueueRetry />
+
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3">
