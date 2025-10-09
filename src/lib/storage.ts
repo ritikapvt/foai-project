@@ -13,6 +13,8 @@ export interface UserProfile {
     baseline_activity: number;
     baseline_work_style: string;
   };
+  savedTips?: string[];
+  history?: any[];
 }
 
 const STORAGE_KEYS = {
