@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "@/lib/storage";
+import { getUser, addCheckInToHistory } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -107,6 +107,13 @@ export default function DailyCheckin() {
 
       // Save result and last check-in
       saveLastCheckIn(today, formData);
+
+      // Save to history
+      addCheckInToHistory({
+        date: payload.date,
+        responses: formData,
+        result,
+      });
 
       // Navigate to result page with data
       navigate("/result", { state: { result, responses: formData } });
