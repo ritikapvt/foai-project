@@ -10,6 +10,7 @@ import { TrendingUp, TrendingDown, Minus, ArrowRight } from "lucide-react";
 import { TodayCard } from "@/components/TodayCard";
 import { StreakBadge } from "@/components/StreakBadge";
 import { InsightCard } from "@/components/InsightCard";
+import { TodayTipCard } from "@/components/TodayTipCard";
 import { calculateInsights, getWeeklySummary } from "@/lib/insights";
 import {
   LineChart,
@@ -83,9 +84,10 @@ export default function Dashboard() {
         </div>
 
         {/* Summary Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <TodayCard />
           <StreakBadge />
+          <TodayTipCard />
         </div>
 
         {/* Weekly Summary */}

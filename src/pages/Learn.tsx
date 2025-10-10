@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "@/lib/storage";
+import { getUser, saveUser } from "@/lib/storage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Brain, Heart, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Video, CheckCircle2 } from "lucide-react";
+import { LEARNING_MODULES } from "@/lib/learningModules";
+import { toast } from "sonner";
 
 export default function Learn() {
   const navigate = useNavigate();
-  const user = getUser();
+  const [user, setUser] = useState(getUser());
 
   useEffect(() => {
     if (!user) {
@@ -14,36 +18,28 @@ export default function Learn() {
     }
   }, [navigate, user]);
 
-  const resources = [
-    {
-      icon: Brain,
-      title: "Stress Management",
-      description: "Techniques to reduce workplace stress and anxiety",
-      color: "text-primary",
-      bgColor: "bg-primary/10",
-    },
-    {
-      icon: Heart,
-      title: "Sleep Hygiene",
-      description: "Improve your sleep quality for better productivity",
-      color: "text-good",
-      bgColor: "bg-good/10",
-    },
-    {
-      icon: Zap,
-      title: "Energy & Focus",
-      description: "Boost your concentration and mental clarity",
-      color: "text-warn",
-      bgColor: "bg-warn/10",
-    },
-    {
-      icon: BookOpen,
-      title: "Work-Life Balance",
-      description: "Maintain healthy boundaries and prevent burnout",
-      color: "text-danger",
-      bgColor: "bg-danger/10",
-    },
-  ];
+  const isCompleted = (moduleId: string) => {
+    return user?.learningCompleted?.some((item) => item.id === moduleId);
+  };
+
+  const markAsRead = (moduleId: string) => {
+    if (!user) return;
+
+    const completed = user.learningCompleted || [];
+    if (completed.some((item) => item.id === moduleId)) {
+      toast.info("Already marked as read");
+      return;
+    }
+
+    const updatedUser = {
+      ...user,
+      learningCompleted: [...completed, { id: moduleId, timestamp: new Date().toISOString() }],
+    };
+
+    saveUser(updatedUser);
+    setUser(updatedUser);
+    toast.success("Marked as read!");
+  };
 
   return (
     <div className="min-h-screen p-4 pb-20 md:pb-8">
@@ -56,23 +52,50 @@ export default function Learn() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
-          {resources.map((resource) => (
-            <Card
-              key={resource.title}
-              className="cursor-pointer hover:shadow-md transition-shadow"
-            >
-              <CardHeader>
-                <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${resource.bgColor} mb-2`}>
-                  <resource.icon className={`h-6 w-6 ${resource.color}`} />
-                </div>
-                <CardTitle className="text-lg">{resource.title}</CardTitle>
-                <CardDescription>{resource.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">Coming soon</p>
-              </CardContent>
-            </Card>
-          ))}
+          {LEARNING_MODULES.map((module) => {
+            const completed = isCompleted(module.id);
+            const Icon = module.type === 'article' ? BookOpen : Video;
+
+            return (
+              <Card
+                key={module.id}
+                className="hover:shadow-md transition-shadow relative"
+              >
+                {completed && (
+                  <div className="absolute top-3 right-3">
+                    <CheckCircle2 className="h-5 w-5 text-good" />
+                  </div>
+                )}
+                <CardHeader>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 mb-2">
+                    <Icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg">{module.title}</CardTitle>
+                  <CardDescription>{module.summary}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex gap-2 flex-wrap">
+                    <Badge variant="secondary" className="text-xs">
+                      {module.duration}
+                    </Badge>
+                    {module.tags.slice(0, 2).map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Button
+                    variant={completed ? "outline" : "default"}
+                    size="sm"
+                    className="w-full"
+                    onClick={() => markAsRead(module.id)}
+                  >
+                    {completed ? "Read again" : "Mark as read"}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>

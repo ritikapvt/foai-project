@@ -14,6 +14,7 @@ import DailyCheckin from "./pages/DailyCheckin";
 import Result from "./pages/Result";
 import Learn from "./pages/Learn";
 import Settings from "./pages/Settings";
+import MyTips from "./pages/MyTips";
 import NotFound from "./pages/NotFound";
 import { isOnboarded } from "@/lib/storage";
 
@@ -86,6 +87,14 @@ const App = () => (
             element={
               <AppLayout>
                 <Settings />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/my-tips"
+            element={
+              <AppLayout>
+                <MyTips />
               </AppLayout>
             }
           />

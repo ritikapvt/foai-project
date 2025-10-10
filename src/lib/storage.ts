@@ -37,6 +37,13 @@ export interface UserProfile {
   currentStreak?: number;
   longestStreak?: number;
   useLocalInsights?: boolean;
+  learningCompleted?: Array<{ id: string; timestamp: string }>;
+  preferences?: {
+    notifications?: boolean;
+    serverAnalytics?: boolean;
+    demoMode?: boolean;
+    fontSize?: 'small' | 'medium' | 'large';
+  };
 }
 
 const STORAGE_KEYS = {

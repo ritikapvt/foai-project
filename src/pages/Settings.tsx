@@ -1,15 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser, clearUser } from "@/lib/storage";
+import { getUser, clearUser, saveUser } from "@/lib/storage";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, Shield, Bell, HelpCircle } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { User, Shield, Bell, Download, Trash2, Code, Type, Edit } from "lucide-react";
 import { QueueRetry } from "@/components/QueueRetry";
+import { ProfileModal } from "@/components/ProfileModal";
+import { exportDataAsCSV } from "@/lib/dataExport";
 import { toast } from "sonner";
 
 export default function Settings() {
   const navigate = useNavigate();
-  const user = getUser();
+  const [user, setUser] = useState(getUser());
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -17,12 +42,33 @@ export default function Settings() {
     }
   }, [navigate, user]);
 
-  const handleReset = () => {
-    if (confirm("Are you sure you want to reset your account? This will delete all your data.")) {
-      clearUser();
-      toast.success("Account reset successfully");
-      navigate("/onboarding");
+  const preferences = user?.preferences || {};
+
+  const updatePreference = (key: string, value: any) => {
+    if (!user) return;
+    const updatedUser = {
+      ...user,
+      preferences: { ...preferences, [key]: value },
+    };
+    saveUser(updatedUser);
+    setUser(updatedUser);
+    toast.success("Preference updated");
+  };
+
+  const handleExportData = () => {
+    exportDataAsCSV();
+    toast.success("Data exported successfully");
+  };
+
+  const handleDeleteAccount = () => {
+    if (deleteConfirmText !== "DELETE") {
+      toast.error("Please type DELETE to confirm");
+      return;
     }
+    clearUser();
+    setShowDeleteDialog(false);
+    toast.success("Account deleted successfully");
+    navigate("/onboarding");
   };
 
   if (!user) return null;
@@ -41,16 +87,27 @@ export default function Settings() {
           {/* Queue Retry Component */}
           <QueueRetry />
 
+          {/* Profile Card */}
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                  <User className="h-5 w-5 text-primary" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Profile</CardTitle>
+                    <CardDescription>Your account information</CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-lg">Profile</CardTitle>
-                  <CardDescription>Your account information</CardDescription>
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowProfileModal(true)}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -69,6 +126,7 @@ export default function Settings() {
             </CardContent>
           </Card>
 
+          {/* Privacy & Data Card */}
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3">
@@ -76,19 +134,39 @@ export default function Settings() {
                   <Shield className="h-5 w-5 text-good" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Privacy</CardTitle>
-                  <CardDescription>Data and consent settings</CardDescription>
+                  <CardTitle className="text-lg">Privacy & Data</CardTitle>
+                  <CardDescription>Control your data and insights</CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center py-2">
-                <span className="text-sm text-muted-foreground">Data consent</span>
-                <span className="text-sm font-medium text-good">Active</span>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="server-analytics">Server-side analytics</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Share anonymized data for better insights
+                  </p>
+                </div>
+                <Switch
+                  id="server-analytics"
+                  checked={preferences.serverAnalytics || false}
+                  onCheckedChange={(checked) => updatePreference("serverAnalytics", checked)}
+                />
+              </div>
+              <div className="pt-2 border-t">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleExportData}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Data (CSV)
+                </Button>
               </div>
             </CardContent>
           </Card>
 
+          {/* Notifications Card */}
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3">
@@ -97,26 +175,91 @@ export default function Settings() {
                 </div>
                 <div>
                   <CardTitle className="text-lg">Notifications</CardTitle>
-                  <CardDescription>Coming soon</CardDescription>
+                  <CardDescription>Manage your notification preferences</CardDescription>
                 </div>
               </div>
             </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="notifications">Enable notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get reminders for daily check-ins
+                  </p>
+                </div>
+                <Switch
+                  id="notifications"
+                  checked={preferences.notifications || false}
+                  onCheckedChange={(checked) => updatePreference("notifications", checked)}
+                />
+              </div>
+            </CardContent>
           </Card>
 
+          {/* Accessibility Card */}
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                  <HelpCircle className="h-5 w-5 text-foreground" />
+                  <Type className="h-5 w-5 text-foreground" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Help & Support</CardTitle>
-                  <CardDescription>Get assistance</CardDescription>
+                  <CardTitle className="text-lg">Accessibility</CardTitle>
+                  <CardDescription>Customize your viewing experience</CardDescription>
                 </div>
               </div>
             </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <Label htmlFor="font-size">Font size</Label>
+                <Select
+                  value={preferences.fontSize || "medium"}
+                  onValueChange={(value) => updatePreference("fontSize", value)}
+                >
+                  <SelectTrigger id="font-size">
+                    <SelectValue placeholder="Select font size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="small">Small</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="large">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
           </Card>
 
+          {/* Developer Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
+                  <Code className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Developer</CardTitle>
+                  <CardDescription>Testing and development options</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="demo-mode">Demo API mode</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Use mock responses for testing
+                  </p>
+                </div>
+                <Switch
+                  id="demo-mode"
+                  checked={preferences.demoMode || false}
+                  onCheckedChange={(checked) => updatePreference("demoMode", checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Danger Zone */}
           <Card className="border-destructive/50">
             <CardHeader>
               <CardTitle className="text-lg text-destructive">Danger Zone</CardTitle>
@@ -126,14 +269,51 @@ export default function Settings() {
               <Button
                 variant="destructive"
                 className="w-full"
-                onClick={handleReset}
+                onClick={() => setShowDeleteDialog(true)}
               >
-                Reset Account
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Account
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      <ProfileModal open={showProfileModal} onOpenChange={setShowProfileModal} />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Account</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <p>
+                This will delete all local and server data associated with your account. This
+                action cannot be undone.
+              </p>
+              <p className="font-medium">Type DELETE to confirm:</p>
+              <Input
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type DELETE"
+                className="mt-2"
+              />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteConfirmText("")}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

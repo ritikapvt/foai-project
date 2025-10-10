@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, CheckCircle, BookOpen, User } from "lucide-react";
+import { LayoutDashboard, CheckCircle, BookOpen, Heart, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/daily-checkin", icon: CheckCircle, label: "Check-in" },
   { to: "/learn", icon: BookOpen, label: "Learn" },
+  { to: "/my-tips", icon: Heart, label: "My Tips" },
   { to: "/settings", icon: User, label: "Profile" },
 ];
 
