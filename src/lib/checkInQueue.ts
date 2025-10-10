@@ -4,13 +4,15 @@ export interface CheckInPayload {
   user_id: string;
   date: string;
   responses: {
-    mood: number;
-    stress: number;
+    work_hours: number;
     sleep_hours: number;
-    workload: "light" | "normal" | "heavy";
+    sleep_quality: number;
+    stress_level: number;
+    mood: number;
+    workload: number;
     focus: number;
     activity_minutes: number;
-    notes?: string;
+    connectedness: number;
   };
   baseline: any;
 }

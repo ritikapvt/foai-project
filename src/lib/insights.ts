@@ -41,10 +41,10 @@ export function calculateInsights(history: CheckInEntry[]): Insight[] {
 
   // Sleep vs Stress correlation
   const sleepStressData = history
-    .filter(e => e.responses.sleep_hours != null && e.responses.stress != null)
+    .filter(e => e.responses.sleep_hours != null && e.responses.stress_level != null)
     .map(e => ({
       sleep: e.responses.sleep_hours,
-      stress: e.responses.stress,
+      stress: e.responses.stress_level,
       date: e.date,
     }));
 
@@ -151,14 +151,14 @@ export function getWeeklySummary(history: CheckInEntry[]): {
 
   const thisWeek = {
     avgMood: avg(thisWeekData.map(e => e.responses.mood)),
-    avgStress: avg(thisWeekData.map(e => e.responses.stress)),
+    avgStress: avg(thisWeekData.map(e => e.responses.stress_level)),
     avgSleep: avg(thisWeekData.map(e => e.responses.sleep_hours)),
     avgRisk: avg(thisWeekData.map(e => riskToNumber(e.result?.risk))),
   };
 
   const lastWeek = {
     avgMood: avg(lastWeekData.map(e => e.responses.mood)),
-    avgStress: avg(lastWeekData.map(e => e.responses.stress)),
+    avgStress: avg(lastWeekData.map(e => e.responses.stress_level)),
     avgSleep: avg(lastWeekData.map(e => e.responses.sleep_hours)),
     avgRisk: avg(lastWeekData.map(e => riskToNumber(e.result?.risk))),
   };

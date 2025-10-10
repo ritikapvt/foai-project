@@ -3,13 +3,15 @@
 export interface CheckInEntry {
   date: string; // YYYY-MM-DD
   responses: {
-    mood: number;
-    stress: number;
+    work_hours: number;
     sleep_hours: number;
-    workload: string;
+    sleep_quality: number;
+    stress_level: number;
+    mood: number;
+    workload: number;
     focus: number;
     activity_minutes: number;
-    notes?: string;
+    connectedness: number;
   };
   result?: {
     risk: string;

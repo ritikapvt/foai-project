@@ -58,12 +58,12 @@ const DEMO_RESPONSES: Record<string, PredictionResponse> = {
 };
 
 function getDemoResponse(payload: CheckInPayload): PredictionResponse {
-  const { stress, sleep_hours, mood } = payload.responses;
+  const { stress_level, sleep_hours, mood } = payload.responses;
   
   // Simple heuristic for demo
-  if (stress >= 8 || sleep_hours < 5 || mood <= 2) {
+  if (stress_level >= 8 || sleep_hours < 5 || mood <= 3) {
     return DEMO_RESPONSES.high;
-  } else if (stress >= 5 || sleep_hours < 6.5 || mood <= 3) {
+  } else if (stress_level >= 5 || sleep_hours < 6.5 || mood <= 5) {
     return DEMO_RESPONSES.medium;
   } else {
     return DEMO_RESPONSES.low;

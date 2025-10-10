@@ -50,7 +50,7 @@ export default function Dashboard() {
   const chartData = history.map(entry => ({
     date: new Date(entry.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     mood: entry.responses.mood,
-    stress: entry.responses.stress,
+    stress: entry.responses.stress_level,
     sleep: entry.responses.sleep_hours,
     risk: entry.result?.risk === "Low" ? 1 : entry.result?.risk === "Medium" ? 2 : entry.result?.risk === "High" ? 3 : 0,
   }));

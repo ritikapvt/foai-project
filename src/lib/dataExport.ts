@@ -11,13 +11,15 @@ export function exportDataAsCSV(): void {
 
   const headers = [
     'date',
-    'mood',
-    'stress',
+    'work_hours',
     'sleep_hours',
+    'sleep_quality',
+    'stress_level',
+    'mood',
     'workload',
     'focus',
     'activity_minutes',
-    'notes',
+    'connectedness',
     'risk',
     'score',
   ];
@@ -26,13 +28,15 @@ export function exportDataAsCSV(): void {
     const { date, responses, result } = entry;
     return [
       date,
-      responses.mood,
-      responses.stress,
+      responses.work_hours,
       responses.sleep_hours,
+      responses.sleep_quality,
+      responses.stress_level,
+      responses.mood,
       responses.workload,
       responses.focus,
       responses.activity_minutes,
-      responses.notes || '',
+      responses.connectedness,
       result?.risk || '',
       result?.score || '',
     ];
