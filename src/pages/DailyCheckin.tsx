@@ -439,7 +439,7 @@ export default function DailyCheckin() {
           </Card>
 
           {/* Submit Button - Fixed at bottom */}
-          <div className="sticky bottom-20 md:bottom-8 pt-4 pb-4 bg-background/95 backdrop-blur-sm">
+          <div className="pt-6">
             <Card className="shadow-lg border-primary/20">
               <CardContent className="pt-6 space-y-3">
                 <Button
