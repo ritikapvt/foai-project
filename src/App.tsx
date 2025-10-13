@@ -21,14 +21,11 @@ import { isOnboarded } from "@/lib/storage";
 const queryClient = new QueryClient();
 
 function AppLayout({ children }: { children: React.ReactNode }) {
-  const [profileOpen, setProfileOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-background">
-      <AppBar onProfileClick={() => setProfileOpen(true)} />
+      <AppBar />
       <main className="pb-16 md:pb-0">{children}</main>
       <BottomNav />
-      <ProfileModal open={profileOpen} onOpenChange={setProfileOpen} />
     </div>
   );
 }

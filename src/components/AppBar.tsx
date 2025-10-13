@@ -1,36 +1,64 @@
-import { User } from "lucide-react";
+import { Leaf, LayoutDashboard, History, User, Lightbulb } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-interface AppBarProps {
-  pageTitle?: string;
-  onProfileClick: () => void;
-}
+export const AppBar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-export function AppBar({ pageTitle = "WellCheck", onProfileClick }: AppBarProps) {
+  const navItems = [
+    { label: "Dashboard", path: "/", icon: LayoutDashboard },
+    { label: "History", path: "/my-tips", icon: History },
+    { label: "Profile", path: "/settings", icon: User },
+    { label: "Insights", path: "/learn", icon: Lightbulb },
+  ];
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="container flex h-14 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">W</span>
-          </div>
-          <span className="hidden sm:inline-block text-sm font-semibold">WellCheck</span>
+    <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 shadow-sm">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+        {/* Brand */}
+        <div 
+          className="flex items-center space-x-2 cursor-pointer group" 
+          onClick={() => navigate("/")}
+        >
+          <Leaf className="h-7 w-7 text-primary group-hover:scale-110 transition-transform" />
+          <span className="font-heading font-bold text-xl text-foreground">
+            UnwindAI 🌿
+          </span>
         </div>
 
-        <h1 className="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-foreground">
-          {pageTitle}
-        </h1>
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center space-x-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Button
+                key={item.path}
+                variant={isActive(item.path) ? "default" : "ghost"}
+                size="sm"
+                onClick={() => navigate(item.path)}
+                className={isActive(item.path) ? "bg-primary hover:bg-primary/90" : ""}
+              >
+                <Icon className="h-4 w-4 mr-2" />
+                {item.label}
+              </Button>
+            );
+          })}
+        </nav>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onProfileClick}
-          aria-label="Open profile"
-          className="rounded-full"
-        >
-          <User className="h-5 w-5" />
-        </Button>
+        {/* Mobile: Just Profile Icon */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/settings")}
+          >
+            <User className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </header>
   );
-}
+};
