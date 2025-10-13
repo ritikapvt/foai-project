@@ -8,44 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* UnwindAI Design System - Warm, elegant, emotionally calming palette */
+    /* UnwindAI Design System - Warm, elegant with strong contrast */
     --background: 210 17% 98%; /* #F9FAFB - soft gray-white */
-    --foreground: 0 0% 29%; /* #4B4B4B - soft charcoal */
+    --foreground: 220 20% 20%; /* #2D3748 - darker for better contrast */
 
     --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 0 0% 29%;
+    --card-foreground: 220 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 29%;
+    --popover-foreground: 220 20% 20%;
 
-    --primary: 168 43% 64%; /* #7CC9B5 - muted teal (calm focus) */
+    --primary: 168 55% 48%; /* #3DBDA0 - richer teal for better contrast */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 18 100% 83%; /* #FFBFA9 - warm peach (balance & optimism) */
-    --secondary-foreground: 0 0% 29%;
+    --secondary: 18 100% 68%; /* #FF9B7A - deeper peach for visibility */
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 210 17% 95%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 17% 92%;
+    --muted-foreground: 220 15% 40%; /* Darker for readability */
 
-    --accent: 167 42% 55%; /* #5CB8A7 - button color */
+    --accent: 167 50% 42%; /* #35A68F - darker teal for buttons */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 85% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Wellness status colors */
-    --good: 157 65% 52%; /* Low burnout - green */
+    /* Wellness status colors - enhanced contrast */
+    --good: 152 69% 42%; /* Richer green */
     --good-foreground: 0 0% 100%;
 
-    --warn: 18 100% 75%; /* Medium burnout - warm orange */
-    --warn-foreground: 0 0% 29%;
+    --warn: 32 95% 52%; /* Stronger orange */
+    --warn-foreground: 220 20% 20%;
 
-    --danger: 0 85% 60%; /* High burnout - red */
+    --danger: 0 72% 51%; /* Vivid red */
     --danger-foreground: 0 0% 100%;
 
-    --border: 210 17% 90%;
-    --input: 210 17% 90%;
-    --ring: 168 43% 64%;
+    --border: 210 17% 85%;
+    --input: 210 17% 88%;
+    --ring: 168 55% 48%;
 
     --radius: 1.25rem; /* 20px - rounded corners */
 
@@ -54,7 +54,8 @@ All colors MUST be HSL.
     
     /* Gradients */
     --gradient-warm: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-calm: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(168 43% 96%) 100%);
+    --gradient-calm: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(168 55% 95%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(168 55% 48%) 0%, hsl(168 60% 42%) 50%, hsl(18 100% 68%) 100%);
   }
 }
 

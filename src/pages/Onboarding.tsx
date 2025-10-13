@@ -57,7 +57,7 @@ export default function Onboarding() {
     };
 
     saveUser(user);
-    toast.success("Welcome to WellCheck!");
+    toast.success("Welcome to UnwindAI! 🌿");
     navigate("/baseline");
   };
 
@@ -68,21 +68,25 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 pb-20 md:pb-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center space-y-2">
+    <div className="min-h-screen flex items-center justify-center p-4 pb-20 md:pb-4 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+      <div className="w-full max-w-md space-y-6 animate-fade-in">
+        <div className="text-center space-y-3">
           <div className="flex justify-center mb-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
-              <span className="text-2xl font-bold text-primary-foreground">W</span>
+            <div className="p-4 bg-gradient-to-br from-primary to-accent rounded-3xl shadow-lg">
+              <svg className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
             </div>
           </div>
-          <h1>Welcome to WellCheck</h1>
-          <p className="text-muted-foreground">
-            Quick check-ins for better work days
+          <h1 className="font-heading text-4xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+            UnwindAI 🌿
+          </h1>
+          <p className="text-foreground text-lg font-medium">
+            Your intelligent burnout recovery companion
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-xl border">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-2xl border-2 border-primary/10 shadow-xl">
           <div className="space-y-2">
             <Label htmlFor="name">Your first name (optional)</Label>
             <Input

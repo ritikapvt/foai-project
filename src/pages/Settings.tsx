@@ -26,6 +26,8 @@ import {
 import { User, Shield, Bell, Download, Trash2, Code, Type, Edit } from "lucide-react";
 import { QueueRetry } from "@/components/QueueRetry";
 import { ProfileModal } from "@/components/ProfileModal";
+import { BackButton } from "@/components/BackButton";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { exportDataAsCSV } from "@/lib/dataExport";
 import { toast } from "sonner";
 
@@ -74,11 +76,18 @@ export default function Settings() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen p-4 pb-20 md:pb-8">
+    <div className="min-h-screen p-4 pb-20 md:pb-8 bg-gradient-to-b from-background to-primary/5">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
-          <h1>Settings</h1>
-          <p className="text-muted-foreground mt-1">
+          <BackButton to="/dashboard" />
+          <div className="mt-2">
+            <Breadcrumbs />
+          </div>
+        </div>
+
+        <div className="mb-6 animate-fade-in">
+          <h1 className="font-heading text-3xl md:text-4xl font-bold">Profile & Settings</h1>
+          <p className="text-foreground/80 mt-1 text-lg">
             Manage your account and preferences
           </p>
         </div>

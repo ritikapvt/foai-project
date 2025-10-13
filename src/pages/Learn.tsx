@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Video, CheckCircle2 } from "lucide-react";
 import { LEARNING_MODULES } from "@/lib/learningModules";
+import { BackButton } from "@/components/BackButton";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { toast } from "sonner";
 
 export default function Learn() {
@@ -42,11 +44,18 @@ export default function Learn() {
   };
 
   return (
-    <div className="min-h-screen p-4 pb-20 md:pb-8">
+    <div className="min-h-screen p-4 pb-20 md:pb-8 bg-gradient-to-b from-background to-primary/5">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <h1>Learn & Explore</h1>
-          <p className="text-muted-foreground mt-1">
+          <BackButton to="/dashboard" />
+          <div className="mt-2">
+            <Breadcrumbs />
+          </div>
+        </div>
+
+        <div className="mb-6 animate-fade-in">
+          <h1 className="font-heading text-3xl md:text-4xl font-bold">Learn & Explore</h1>
+          <p className="text-foreground/80 mt-1 text-lg">
             Wellness resources tailored for you
           </p>
         </div>

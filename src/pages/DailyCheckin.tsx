@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { submitCheckIn } from "@/lib/checkInApi";
 import { addToQueue, canCheckInToday, getLastCheckIn, saveLastCheckIn } from "@/lib/checkInQueue";
 import { CheckInPayload } from "@/lib/checkInQueue";
+import { BackButton } from "@/components/BackButton";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function DailyCheckin() {
   const navigate = useNavigate();
@@ -175,18 +177,26 @@ export default function DailyCheckin() {
   }
 
   return (
-    <div className="min-h-screen p-4 pb-20 md:pb-8">
+    <div className="min-h-screen p-4 pb-20 md:pb-8 bg-gradient-to-b from-background to-primary/5">
       <div className="max-w-2xl mx-auto">
+        {/* Back Button & Breadcrumbs */}
+        <div className="mb-6">
+          <BackButton to="/dashboard" />
+          <div className="mt-2">
+            <Breadcrumbs />
+          </div>
+        </div>
+
         {/* Last check-in info */}
         {lastCheckInDate && (
-          <Card className="mb-4 bg-secondary/50 border-secondary">
+          <Card className="mb-4 bg-secondary/10 border-secondary/30">
             <CardContent className="py-3 px-4">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
+                <span className="text-foreground">
                   Last check-in: <strong>{lastCheckInDate}</strong>
                 </span>
                 {!canSubmit && (
-                  <span className="text-muted-foreground">
+                  <span className="text-foreground">
                     Next available: <strong>{getNextAvailableDate()}</strong>
                   </span>
                 )}
@@ -195,9 +205,9 @@ export default function DailyCheckin() {
           </Card>
         )}
 
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">🧘 Daily Check-In</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-6 text-center animate-fade-in">
+          <h1 className="font-heading text-3xl md:text-4xl font-bold mb-2">🧘 Daily Check-In</h1>
+          <p className="text-foreground/80 text-lg">
             Quick 30-second reflection — answer honestly to get personalized tips.
           </p>
           <p className="text-sm text-muted-foreground mt-1">9 questions</p>

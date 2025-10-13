@@ -37,7 +37,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/onboarding" replace />} />
+          <Route path="/" element={<Navigate to={isOnboarded() ? "/dashboard" : "/onboarding"} replace />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route
             path="/baseline"
