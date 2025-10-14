@@ -40,6 +40,7 @@ export interface UserProfile {
   longestStreak?: number;
   useLocalInsights?: boolean;
   learningCompleted?: Array<{ id: string; timestamp: string }>;
+  futureSelfMessage?: string;
   preferences?: {
     notifications?: boolean;
     serverAnalytics?: boolean;
