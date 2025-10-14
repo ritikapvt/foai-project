@@ -4,13 +4,15 @@ import { getUser, hasBaseline, getCheckInHistory } from "@/lib/storage";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Minus, ArrowRight, Calendar, TrendingDown as TrendDown, Sparkles } from "lucide-react";
-import { TodayCard } from "@/components/TodayCard";
-import { StreakBadge } from "@/components/StreakBadge";
+import { TrendingUp, TrendingDown, Minus, ArrowRight, Zap } from "lucide-react";
 import { InsightCard } from "@/components/InsightCard";
-import { BurnoutGauge } from "@/components/BurnoutGauge";
-import { MoodSelector } from "@/components/MoodSelector";
-import { WellnessTipCarousel } from "@/components/WellnessTipCarousel";
+import { WelcomeCard } from "@/components/WelcomeCard";
+import { BurnoutForecastGraph } from "@/components/BurnoutForecastGraph";
+import { AICoachTips } from "@/components/AICoachTips";
+import { MoodCheckInWidget } from "@/components/MoodCheckInWidget";
+import { GoalTracker } from "@/components/GoalTracker";
+import { RelaxationZone } from "@/components/RelaxationZone";
+import { StressProductivityChart } from "@/components/StressProductivityChart";
 import { calculateInsights, getWeeklySummary } from "@/lib/insights";
 import {
   LineChart,
@@ -89,56 +91,31 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-b from-background to-primary/5 pb-20 md:pb-8">
       <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
         
-        {/* Header Section */}
-        <div className="text-center space-y-2 animate-fade-in pt-4">
-          <h1 className="font-heading text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Welcome back to UnwindAI
-          </h1>
-          <p className="text-muted-foreground text-lg">Let's check your balance today.</p>
+        {/* Welcome Card */}
+        <WelcomeCard userName={user.name} />
+
+        {/* Live Analytics Section */}
+        <div className="space-y-6">
+          <h2 className="font-heading text-2xl font-semibold flex items-center gap-2">
+            <Zap className="h-6 w-6 text-primary" />
+            Live Analytics
+          </h2>
+          
+          <BurnoutForecastGraph />
+          <StressProductivityChart />
         </div>
 
-        {/* Main Burnout Score + Mood */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Burnout Score Gauge */}
-          <Card className="card-hover bg-gradient-to-br from-card to-primary/5">
-            <CardContent className="pt-8 pb-6 flex justify-center">
-              <BurnoutGauge score={burnoutScore} />
-            </CardContent>
-          </Card>
+        {/* AI Coach Tips */}
+        <AICoachTips />
 
-          {/* Mood Check-in Widget */}
-          <MoodSelector />
-        </div>
+        {/* Mood Check-In Widget */}
+        <MoodCheckInWidget />
 
-        {/* Burnout Forecast */}
-        <Card className="card-hover border-warn/30 bg-gradient-to-br from-warn/5 to-secondary/5">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-warn/10 rounded-2xl">
-                <TrendDown className="h-6 w-6 text-warn" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-heading font-semibold text-lg mb-2">Burnout Forecast</h3>
-                <p className="text-foreground/80 mb-3">
-                  You're <span className="font-bold text-warn">{Math.min(burnoutScore + 15, 95)}% likely</span> to face burnout in 3 days if trends continue.
-                </p>
-                <div className="bg-primary/10 rounded-xl p-3 flex items-start gap-2">
-                  <Sparkles className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-foreground">
-                    <strong className="text-primary">AI Suggestion:</strong> Try shorter work sessions tomorrow and schedule 2 brief walking breaks.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Goal Tracker */}
+        <GoalTracker />
 
-        {/* Summary Cards Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <TodayCard />
-          <StreakBadge />
-          <WellnessTipCarousel />
-        </div>
+        {/* Relaxation Zone */}
+        <RelaxationZone />
 
         {/* Charts Section */}
         {chartData.length > 0 && (
@@ -298,17 +275,23 @@ export default function Dashboard() {
           </Card>
         )}
 
-        {/* Progress Tracker / Streaks */}
-        <Card className="card-hover bg-gradient-to-br from-good/10 to-primary/10">
+        {/* Predictive Insights */}
+        <Card className="card-hover border-primary/30 bg-gradient-to-br from-primary/10 to-secondary/10">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="p-4 bg-good/20 rounded-full">
-                <Calendar className="h-8 w-8 text-good" />
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-primary/10 rounded-2xl">
+                <Zap className="h-6 w-6 text-primary" />
               </div>
-              <div>
-                <h3 className="font-heading font-semibold text-lg">Days Balanced</h3>
-                <p className="text-3xl font-bold font-heading text-good">{user?.currentStreak || 0} days 🌟</p>
-                <p className="text-sm text-muted-foreground mt-1">Keep it up! You're doing great.</p>
+              <div className="flex-1">
+                <h3 className="font-heading font-semibold text-lg mb-2">Predictive Insights</h3>
+                <p className="text-foreground/80 mb-3">
+                  Your burnout may increase next week if sleep drops below 6h/night.
+                </p>
+                <div className="bg-good/10 rounded-xl p-3">
+                  <p className="text-sm text-foreground">
+                    <strong className="text-good">💡 Recommendation:</strong> Block 8 hours for sleep and set a bedtime alarm to maintain balance.
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -344,14 +327,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Motivational Quote */}
-        <Card className="card-hover bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-primary/20">
-          <CardContent className="pt-6 text-center">
-            <p className="text-lg font-heading italic text-foreground">
-              "You're not behind in life. You're simply unwinding."
-            </p>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

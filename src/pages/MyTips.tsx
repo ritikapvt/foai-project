@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser, saveUser } from "@/lib/storage";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Heart } from "lucide-react";
-import { toast } from "sonner";
+import { getUser } from "@/lib/storage";
+import { Clock } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { TimelineView } from "@/components/TimelineView";
+import { TrendCards } from "@/components/TrendCards";
+import { TipLog } from "@/components/TipLog";
+import { MonthlySummary } from "@/components/MonthlySummary";
 
 export default function MyTips() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(getUser());
+  const user = getUser();
 
   useEffect(() => {
     if (!user) {
@@ -17,79 +19,41 @@ export default function MyTips() {
     }
   }, [navigate, user]);
 
-  const savedTips = user?.savedTips || [];
-
-  const removeTip = (tip: string) => {
-    if (!user) return;
-
-    const updatedUser = {
-      ...user,
-      savedTips: savedTips.filter((t) => t !== tip),
-    };
-
-    saveUser(updatedUser);
-    setUser(updatedUser);
-    toast.success("Tip removed");
-  };
-
   if (!user) return null;
 
   return (
-    <div className="min-h-screen p-4 pb-20 md:pb-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <h1>My Saved Tips</h1>
-          <p className="text-muted-foreground mt-1">
-            Quick actions you can take anytime
+    <div className="min-h-screen bg-gradient-to-b from-background to-primary/5 pb-20 md:pb-8">
+      <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
+        <BackButton />
+        <Breadcrumbs />
+
+        {/* Header */}
+        <div className="text-center space-y-2 animate-fade-in pt-4">
+          <div className="flex items-center justify-center gap-2">
+            <Clock className="h-8 w-8 text-primary" />
+            <h1 className="font-heading text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Your Wellness History
+            </h1>
+          </div>
+          <p className="text-muted-foreground text-lg">
+            A personal journal and progress record of your wellness journey
           </p>
         </div>
 
-        {savedTips.length === 0 ? (
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <Heart className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-              <p className="text-muted-foreground">
-                No saved tips yet. Save tips from your daily check-in results!
-              </p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => navigate("/daily-checkin")}
-              >
-                Take a Check-in
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {savedTips.map((tip, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <CardDescription className="text-base text-foreground">
-                        {tip}
-                      </CardDescription>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeTip(tip)}
-                      className="shrink-0"
-                    >
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
-            <div className="pt-4">
-              <Badge variant="outline" className="text-xs">
-                {savedTips.length} saved {savedTips.length === 1 ? "tip" : "tips"}
-              </Badge>
-            </div>
-          </div>
-        )}
+        {/* Trend Cards */}
+        <TrendCards />
+
+        {/* Monthly Summary */}
+        <MonthlySummary />
+
+        {/* Timeline View */}
+        <div>
+          <h2 className="font-heading text-2xl font-semibold mb-4">Daily Timeline (30 days)</h2>
+          <TimelineView />
+        </div>
+
+        {/* Tip Log */}
+        <TipLog />
       </div>
     </div>
   );
