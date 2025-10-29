@@ -7,12 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Minus, ArrowRight, Zap } from "lucide-react";
 import { InsightCard } from "@/components/InsightCard";
 import { WelcomeCard } from "@/components/WelcomeCard";
-import { BurnoutForecastGraph } from "@/components/BurnoutForecastGraph";
 import { AICoachTips } from "@/components/AICoachTips";
-import { MoodCheckInWidget } from "@/components/MoodCheckInWidget";
-import { GoalTracker } from "@/components/GoalTracker";
 import { RelaxationZone } from "@/components/RelaxationZone";
-import { StressProductivityChart } from "@/components/StressProductivityChart";
 import { calculateInsights, getWeeklySummary } from "@/lib/insights";
 import {
   LineChart,
@@ -94,134 +90,11 @@ export default function Dashboard() {
         {/* Welcome Card */}
         <WelcomeCard userName={user.name} />
 
-        {/* Live Analytics Section */}
-        <div className="space-y-6">
-          <h2 className="font-heading text-2xl font-semibold flex items-center gap-2">
-            <Zap className="h-6 w-6 text-primary" />
-            Live Analytics
-          </h2>
-          
-          <BurnoutForecastGraph />
-          <StressProductivityChart />
-        </div>
-
         {/* AI Coach Tips */}
         <AICoachTips />
 
-        {/* Mood Check-In Widget */}
-        <MoodCheckInWidget />
-
-        {/* Goal Tracker */}
-        <GoalTracker />
-
         {/* Relaxation Zone */}
         <RelaxationZone />
-
-        {/* Charts Section */}
-        {chartData.length > 0 && (
-          <div className="space-y-6">
-            <h2 className="font-heading text-2xl font-semibold">Your Trends</h2>
-
-            {/* Sleep Insights */}
-            <Card className="card-hover">
-              <CardHeader>
-                <CardTitle className="font-heading">Sleep & Burnout Correlation</CardTitle>
-                <CardDescription>See how your sleep impacts stress levels</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="sleepGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis
-                      dataKey="date"
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
-                      tickLine={false}
-                    />
-                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "12px",
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="sleep"
-                      stroke="hsl(var(--primary))"
-                      fill="url(#sleepGradient)"
-                      strokeWidth={3}
-                      name="Sleep Hours"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-                <div className="mt-4 p-4 bg-good/10 rounded-xl">
-                  <p className="text-sm text-foreground">
-                    <strong className="text-good">Best range:</strong> 7-9 hours. Your average this week is {avgSleep.toFixed(1)}h.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Workload Balance */}
-            <Card className="card-hover">
-              <CardHeader>
-                <CardTitle className="font-heading">Workload Balance</CardTitle>
-                <CardDescription>Work hours vs relaxation this week</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis
-                      dataKey="date"
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
-                      tickLine={false}
-                    />
-                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "12px",
-                      }}
-                    />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="mood"
-                      stroke="hsl(var(--good))"
-                      strokeWidth={3}
-                      dot={{ fill: "hsl(var(--good))", r: 4 }}
-                      name="Mood"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="stress"
-                      stroke="hsl(var(--danger))"
-                      strokeWidth={3}
-                      dot={{ fill: "hsl(var(--danger))", r: 4 }}
-                      name="Stress"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-                <div className="mt-4 p-4 bg-secondary/10 rounded-xl">
-                  <p className="text-sm text-foreground">
-                    Work dominated your week (70%). Try a digital detox this weekend.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
         {/* Weekly Summary Stats */}
         {weeklySummary && (
